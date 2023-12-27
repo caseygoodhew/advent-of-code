@@ -1,6 +1,17 @@
 import chalk from "chalk";
+import fs from 'fs';
 
-async function main() {
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const create = (year, day) => {
+    fs.cpSync(`${__dirname}/template`, `${__dirname}/${year}/${day}`, { recursive: true });
+}
+
+async function main(make) {
 
     const args = process.argv;
     let year = '2023';
@@ -26,7 +37,16 @@ async function main() {
         }
     })
 
-    const moduleA = await import(`./${year}/${day}/index.js`);
+    let moduleA;
+    try {
+        moduleA = await import(`./${year}/${day}/index.js`);
+    } catch (e) {
+        if (make) {
+            create(year, day);
+            main();
+        }
+        return;
+    }
     const parts = moduleA.default(test);
     return {
         command: `${year} ${day} ${part} ${test ? '(test)' : ''}`,
@@ -43,7 +63,7 @@ const formatValue = (value) => {
     }
 }
 
-main().then(({ command, result }) => {
+main(true).then(({ command, result }) => {
     console.log(`Command: ${chalk.yellow(command)}`);
     console.log(`Result: ${chalk.green(formatValue(result))}`);
     console.log();
