@@ -63,7 +63,11 @@ const formatValue = (value) => {
     }
 }
 
-main(true).then(({ command, result }) => {
+main(true).then((_result) => {
+    if (_result == null) {
+        return;
+    }
+    const { command, result } = _result;
     console.log(`Command: ${chalk.yellow(command)}`);
     console.log(`Result: ${chalk.green(formatValue(result))}`);
     console.log();
