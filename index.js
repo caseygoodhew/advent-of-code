@@ -43,9 +43,8 @@ async function main(make) {
     } catch (e) {
         if (make) {
             create(year, day);
-            main();
+            return main();
         }
-        return;
     }
     const parts = moduleA.default(test);
     return {
