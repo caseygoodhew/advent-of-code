@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const create = (year, day) => {
-    fs.cpSync(`${__dirname}/template`, `${__dirname}/${year}/${day}`, { recursive: true });
+    fs.cpSync(`${__dirname}/template`, `${__dirname}/${year}/${day}`, { recursive: true, errorOnExist: true });
 }
 
 async function main(make) {
