@@ -1,3 +1,4 @@
+import { Timer } from 'timer-node';
 import chalk from "chalk";
 import fs from 'fs';
 
@@ -42,14 +43,20 @@ async function main(make) {
         moduleA = await import(`./${year}/${day}/index.js`);
     } catch (e) {
         if (make) {
-            create(year, day);
+            //create(year, day);
             return main();
         }
     }
     const parts = moduleA.default(test);
+    const timer = new Timer({ label: `${part} runtime` });
+    timer.start();
+    const result = parts[part]()
+    timer.stop();
+
     return {
         command: `${year} ${day} ${part} ${test ? '(test)' : ''}`,
-        result: parts[part]()
+        time: timer.time(),
+        result: result
     };
 }
 
@@ -62,13 +69,31 @@ const formatValue = (value) => {
     }
 }
 
+const formatTime = (time) => {
+    const parts = ['d', 'h', 'm', 's', 'ms'].reduce((acc, unit) => {
+        if (acc.length < 2 && (acc.length > 0 || time[unit] > 0)) {
+            acc.push(`${time[unit]}${unit}`);
+        }
+
+        return acc;
+    }, []);
+
+    const chalkFn = (time.d > 0 || time.h > 0 || time.m >= 1)
+        ? chalk.red
+        : (time.s > 30 ? chalk.yellow : chalk.green)
+
+    return chalkFn(`(${parts.join(' ')})`)
+}
+
 main(true).then((_result) => {
     if (_result == null) {
         return;
     }
-    const { command, result } = _result;
+    const { command, result, time } = _result;
     console.log(`Command: ${chalk.yellow(command)}`);
-    console.log(`Result: ${chalk.green(formatValue(result))}`);
+    console.log(`Time: ${formatTime(time)}`);
+    console.log(`Result: ${chalk.green(formatValue(result))
+        }`);
     console.log();
 }).catch(err => {
     console.error(err);
