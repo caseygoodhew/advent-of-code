@@ -1,3 +1,3 @@
-export default function (data) {
+export default function (data, { isTest }) {
     return data;
 }

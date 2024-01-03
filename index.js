@@ -39,18 +39,19 @@ async function main(make) {
     })
 
     let moduleA;
+    const folder = `./${year}/${day}`;
     try {
-        moduleA = await import(`./${year}/${day}/index.js`);
+        moduleA = await import(`${folder}/index.js`);
     } catch (e) {
-        if (make) {
-            //create(year, day);
+        if (make && !fs.existsSync(folder)) {
+            create(year, day);
             return main();
         }
     }
     const parts = moduleA.default(test);
     const timer = new Timer({ label: `${part} runtime` });
     timer.start();
-    const result = parts[part]()
+    const result = parts[part]({ isTest: test })
     timer.stop();
 
     return {
