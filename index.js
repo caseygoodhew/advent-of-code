@@ -15,7 +15,7 @@ const create = (year, day) => {
 async function main(make) {
 
     const args = process.argv;
-    let year = '2023';
+    let year = '2024';
     let day = 'd01'
     let part = 'part1';
     let test = false;

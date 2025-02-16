@@ -6,6 +6,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
+    "start_w_test": "node index test",
+    "start_w_day": "node index d01",
+    "start_w_year": "node index 2024",
+    "start_w_part": "node index part1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
