@@ -14,29 +14,65 @@ const create = (year, day) => {
 
 async function main(make) {
 
+    const defaults = {
+        year: '2024',
+        day: 'd05',
+        part: 'part1',
+        test: false
+    };
+
     const args = process.argv;
-    let year = '2024';
-    let day = 'd01'
-    let part = 'part1';
-    let test = false;
+    const provided = {};
 
     args.forEach(arg => {
         if (/^d[0-9]{2}$/.test(arg)) {
-            day = arg;
+            provided.day = arg;
         }
 
         if (/^[0-9]{4}$/.test(arg)) {
-            year = arg;
+            provided.year = arg;
         }
 
         if (/^part[0-9]$/.test(arg)) {
-            part = arg;
+            provided.part = arg;
         }
 
         if (arg === 'test') {
-            test = true;
+            provided.test = true;
+        }
+
+        if (arg === 'notest') {
+            provided.test = false;
+        }
+
+        if (arg === 'latest') {
+            provided.latest = true;
         }
     })
+
+    const latest = {};
+
+    if (provided.latest) {
+        const years = fs.readdirSync('./').filter(x => /^[0-9]{4,4}$/.test(x));
+        latest.year = years.sort().reverse()[0];
+
+        const days = fs.readdirSync(`./${latest.year}`).filter(x => /^d[0-9]{2,2}$/.test(x));
+        latest.day = days.sort().reverse()[0];
+
+        const latestPart2 = fs.readFileSync(`./${latest.year}/${latest.day}/part2.js`, 'utf8');
+        const templatePart2 = fs.readFileSync(`./template/part2.js`, 'utf8');
+
+        latest.part = latestPart2 === templatePart2 ? 'part1' : 'part2';
+    }
+
+    const resolve = (key) => {
+        return provided[key] ?? latest[key] ?? defaults[key];
+    }
+
+    let year = resolve('year');
+    let day = resolve('day');
+    let part = resolve('part');
+    let test = resolve('test');
 
     let moduleA;
     const folder = `./${year}/${day}`;

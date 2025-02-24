@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
+    "start": "node index d05 test",
     "start_w_test": "node index test",
     "start_w_day": "node index d01",
     "start_w_year": "node index 2024",
