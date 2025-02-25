@@ -16,7 +16,7 @@ async function main(make) {
 
     const defaults = {
         year: '2024',
-        day: 'd05',
+        day: 'd12',
         part: 'part1',
         test: false
     };

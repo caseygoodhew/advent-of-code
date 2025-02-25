@@ -28,6 +28,20 @@
                 "latest",
                 "test"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Custom",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/index.js",
+            "args": [
+                "d08",
+                "part2",
+                "test"
+            ]
         }
     ]
 }
